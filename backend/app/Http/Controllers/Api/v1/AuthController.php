@@ -3,43 +3,55 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\LoginValidator;
 use App\Http\Requests\RegistrationValidator;
-use Laravolt\Avatar\Facade as Avatar;
-use Illuminate\Support\Facades\File;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    protected AuthService $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     // Registration ...
     public function register(RegistrationValidator $request)
     {
-        try {
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'User registration failed',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        $data = $this->authService->register($request->validated());
 
-        // Store avatar in storage
-        $avatar = Avatar::create($request->first_name . ' ' . $request->last_name)->getImageObject();
-        $directory = storage_path('app/public/avatars');
-        if (! File::exists($directory)) {
-            File::makeDirectory($directory, 0755, true);
-        }
-        $avatar->save($directory . '/avatar_' . $user->id . '.png');
-
-        $token = $user->createToken('auth_token')->accessToken;
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'code' => 201,
+            'status' => 'success',
+            'message' => 'User registered successfully',
+            'data' => $data,
+        ], 201);
+    }
+
+    // Login ...
+    public function login(LoginValidator $request)
+    {
+        $data = $this->authService->login($request->validated());
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'User logged in successfully',
+            'data' => $data,
+        ]);
+    }
+
+    // Logout ...
+    public function logout(Request $request)
+    {
+        $this->authService->logout($request->user());
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'User logged out successfully',
         ]);
     }
 }
