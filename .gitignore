@@ -1,0 +1,7 @@
+# Dependancy files
+frontend/node_modules/
+backend/vendor/
+
+
+# Build files
+frontend/dist/
