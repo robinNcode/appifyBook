@@ -52,4 +52,13 @@ class Post extends Model
             }
         });
     }
+
+    /**
+     * A private post is only viewable by its author; public posts by anyone.
+     */
+    public function isViewableBy(?User $user): bool
+    {
+        return $this->visibility !== 'private'
+            || ($user && $this->user_id === $user->id);
+    }
 }

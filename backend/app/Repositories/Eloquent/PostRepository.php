@@ -2,37 +2,44 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Repositories\Contracts\PostRepositoryInterfaces;
 use App\Models\Post;
+use App\Models\User;
+use App\Repositories\Contracts\PostRepositoryInterface;
 
-class PostRepository implements PostRepositoryInterfaces
+class PostRepository implements PostRepositoryInterface
 {
-    public function getAllPosts()
+    /**
+     * Cursor-paginated feed, newest first. Uses the (visibility, id) index so
+     * performance stays constant regardless of table size. `likes` is
+     * constrained to the viewer so the collection doubles as like-state.
+     */
+    public function feedFor(User $user)
     {
-        return Post::all();
+        return Post::query()
+            ->visibleTo($user)
+            ->with([
+                'user',
+                'likes' => fn ($q) => $q->where('user_id', $user->id),
+            ])
+            ->latest('id')
+            ->cursorPaginate(10);
     }
 
-    public function getPostById(int $id)
-    {
-        return Post::find($id);
-    }
-
-    public function createPost(array $data)
+    public function create(array $data): Post
     {
         return Post::create($data);
     }
 
-    public function updatePost(int $id, array $data)
+    public function loadForView(Post $post, int $userId): Post
     {
-        $post = Post::find($id);
-        $post->update($data);
-        return $post;
+        return $post->load([
+            'user',
+            'likes' => fn ($q) => $q->where('user_id', $userId),
+        ]);
     }
 
-    public function deletePost(int $id)
+    public function delete(Post $post): void
     {
-        $post = Post::find($id);
         $post->delete();
-        return $post;
     }
 }

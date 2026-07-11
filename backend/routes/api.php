@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\CommentController;
+use App\Http\Controllers\Api\v1\LikeController;
+use App\Http\Controllers\Api\v1\PostController;
 
 // Guest urls
 Route::get('/', function () {
@@ -36,5 +39,20 @@ Route::prefix('v1')->group(function () {
             return $request->user();
         });
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        // Posts
+        Route::apiResource('posts', PostController::class)
+            ->only(['index', 'store', 'show', 'destroy']);
+
+        // Comments
+        Route::get('posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
+        Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+        Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+        // Likes
+        Route::post('posts/{post}/like', [LikeController::class, 'togglePost'])->name('posts.like');
+        Route::post('comments/{comment}/like', [LikeController::class, 'toggleComment'])->name('comments.like');
+        Route::get('posts/{post}/likers', [LikeController::class, 'postLikers'])->name('posts.likers');
+        Route::get('comments/{comment}/likers', [LikeController::class, 'commentLikers'])->name('comments.likers');
     });
 });

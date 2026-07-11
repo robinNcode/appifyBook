@@ -28,6 +28,8 @@ class AuthService
         ]);
 
         $avatarUrl = $this->createAvatar($user);
+        // Persist the relative path so UserResource can build avatar_url.
+        $user = $this->authRepository->setAvatar($user, 'avatars/avatar_' . $user->id . '.png');
         $token = $user->createToken('auth_token')->accessToken;
 
         return [

@@ -17,4 +17,12 @@ class AuthRepository implements AuthRepositoryInterfaces
     {
         return User::where('email', $email)->first();
     }
+
+    public function setAvatar(User $user, string $path): User
+    {
+        $user->avatar = $path;
+        $user->save();
+
+        return $user;
+    }
 }

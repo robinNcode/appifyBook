@@ -1,40 +1,73 @@
-<?php 
+<?php
 
 namespace App\Services;
 
-use App\Repositories\Eloquent\PostRepository;
+use App\Models\Post;
+use App\Models\User;
+use App\Repositories\Contracts\PostRepositoryInterface;
+use Illuminate\Http\UploadedFile;
 
 class PostService
 {
-    protected PostRepository $postRepository;
+    protected PostRepositoryInterface $postRepository;
 
-    public function __construct(PostRepository $postRepository)
+    public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->postRepository = $postRepository;
     }
 
-    public function getAllPosts()
+    /**
+     * Paginated feed visible to the given user.
+     */
+    public function getFeed(User $user)
     {
-        return $this->postRepository->getAllPosts();
+        return $this->postRepository->feedFor($user);
     }
 
-    public function getPostById(int $id)
+    /**
+     * Create a post for the author, storing the optional image.
+     */
+    public function createPost(array $data, User $author, ?UploadedFile $image = null): Post
     {
-        return $this->postRepository->getPostById($id);
+        $data['user_id'] = $author->id;
+
+        if ($image) {
+            $data['image_path'] = $image->store('posts', 'public');
+        }
+
+        $post = $this->postRepository->create($data);
+        $post->load('user');
+        // Fresh post: viewer has no like yet.
+        $post->setRelation('likes', collect());
+
+        return $post;
     }
 
-    public function createPost(array $data)
+    /**
+     * Load a single post for viewing, enforcing visibility.
+     */
+    public function viewPost(Post $post, User $user): Post
     {
-        return $this->postRepository->createPost($data);
+        $this->authorizeView($post, $user);
+
+        return $this->postRepository->loadForView($post, $user->id);
     }
 
-    public function updatePost(int $id, array $data)
+    /**
+     * Delete a post (author only).
+     */
+    public function deletePost(Post $post, User $user): void
     {
-        return $this->postRepository->updatePost($id, $data);
+        abort_unless($post->user_id === $user->id, 403, 'You cannot delete this post.');
+
+        $this->postRepository->delete($post);
     }
 
-    public function deletePost(int $id)
+    /**
+     * Guard: a private post is only viewable by its author.
+     */
+    public function authorizeView(Post $post, ?User $user): void
     {
-        return $this->postRepository->deletePost($id);
+        abort_unless($post->isViewableBy($user), 403, 'This post is private.');
     }
 }

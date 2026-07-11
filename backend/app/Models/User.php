@@ -49,4 +49,12 @@ class User extends Authenticatable implements OAuthenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Full name accessor — exposed as `name` on the model/resource.
+     */
+    public function getNameAttribute(): string
+    {
+        return trim("{$this->first_name} {$this->last_name}");
+    }
 }
