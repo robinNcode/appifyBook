@@ -1,0 +1,199 @@
+/* Small supplemental styles layered on top of the provided Buddy Script theme.
+   The bulk of the design comes from /public/assets/css/*. These rules only
+   cover interactive states the static template didn't need. */
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.bs-error {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.bs-field-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.bs-alert {
+  background: #fff1f0;
+  border: 1px solid #ffccc7;
+  color: #cf1322;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.bs-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: bs-spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes bs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bs-clickable {
+  cursor: pointer;
+}
+
+.bs-muted {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Compose / feed helpers */
+.bs-image-preview {
+  position: relative;
+  margin-top: 12px;
+  display: inline-block;
+}
+
+.bs-image-preview img {
+  max-height: 240px;
+  border-radius: 8px;
+}
+
+.bs-image-preview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.bs-visibility-select {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #444;
+}
+
+.bs-post-image {
+  width: 100%;
+  border-radius: 8px;
+  max-height: 520px;
+  object-fit: cover;
+}
+
+.bs-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.bs-avatar-fallback {
+  display: grid;
+  place-items: center;
+  background: #377dff;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  text-transform: uppercase;
+}
+
+.bs-reaction-active span {
+  color: #377dff !important;
+  font-weight: 600;
+}
+
+.bs-likers-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 1050;
+}
+
+.bs-likers-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 360px;
+  max-width: 92vw;
+  max-height: 70vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bs-likers-modal header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bs-likers-modal header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.bs-likers-list {
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.bs-liker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+}
+
+.bs-liker-row .bs-liker-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+}
+
+.bs-reply-thread {
+  margin-left: 42px;
+  border-left: 2px solid #f0f0f0;
+  padding-left: 12px;
+}
+
+.bs-inline-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #666;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.bs-inline-btn.bs-active {
+  color: #377dff;
+  font-weight: 600;
+}
+
+.bs-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
