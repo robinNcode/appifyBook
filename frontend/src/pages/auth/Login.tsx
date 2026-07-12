@@ -2,8 +2,8 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
-import { useAuth } from '../context/AuthContext';
-import type { LoginCredentials, ValidationErrors } from '../types';
+import { useAuth } from '../../context/AuthContext';
+import type { LoginCredentials, ValidationErrors } from '../../types';
 
 
 export default function Login() {
