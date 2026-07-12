@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { validateLogin } from '../../utils/validators';
 import type { LoginCredentials, ValidationErrors } from '../../types';
 
 
@@ -22,13 +23,28 @@ export default function Login() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setForm((f) => ({ ...f, [name]: value }));
+        // Clear this field's error as soon as the user starts fixing it.
+        setErrors((prev) => {
+            if (!prev[name]) return prev;
+            const next = { ...prev };
+            delete next[name];
+            return next;
+        });
     }
 
-    const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setGeneralError(null);
+
+        // Run client-side validation first; bail out before hitting the API.
+        const clientErrors = validateLogin(form);
+        if (Object.keys(clientErrors).length > 0) {
+            setErrors(clientErrors);
+            return;
+        }
+
         setSubmitting(true);
         setErrors({});
-        setGeneralError(null);
 
         try {
             await login(form);
@@ -78,7 +94,7 @@ export default function Login() {
 
                                 {generalError && <div className="bs-alert">{generalError}</div>}
 
-                                <form className="_social_login_form" onSubmit={handleSubmit}>
+                                <form className="_social_login_form" onSubmit={handleSubmit} noValidate>
                                     <div className="row">
                                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div className="_social_login_form_input _mar_b14">

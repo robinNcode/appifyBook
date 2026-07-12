@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { validateRegister } from '../../utils/validators';
 import type { RegisterPayload, ValidationErrors } from '../../types';
 
 export default function Register() {
@@ -23,12 +24,27 @@ export default function Register() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+    // Clear this field's error as soon as the user starts fixing it.
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setErrors({});
     setGeneralError('');
+
+    // Run client-side validation first; bail out before hitting the API.
+    const clientErrors = validateRegister(form);
+    if (Object.keys(clientErrors).length > 0) {
+      setErrors(clientErrors);
+      return;
+    }
+
+    setErrors({});
     setSubmitting(true);
     try {
       await register(form);
@@ -80,7 +96,7 @@ export default function Register() {
 
                 {generalError && <div className="bs-alert">{generalError}</div>}
 
-                <form className="_social_registration_form" onSubmit={handleSubmit}>
+                <form className="_social_registration_form" onSubmit={handleSubmit} noValidate>
                   <div className="row">
                     <div className="col-xl-6 col-lg-12 col-md-6 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
@@ -155,6 +171,9 @@ export default function Register() {
                           className="form-control _social_registration_input"
                           required
                         />
+                        {errors.confirm_password && (
+                          <span className="bs-field-error">{errors.confirm_password[0]}</span>
+                        )}
                       </div>
                     </div>
                   </div>
