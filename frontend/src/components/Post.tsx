@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { deletePost, togglePostLike } from '../api/services';
 import Avatar from './Avatar';
+import CommentSection from './CommentSection';
 import type { Post as PostType } from '../types';
 
 interface PostProps {
@@ -12,6 +13,11 @@ interface PostProps {
 export default function Post({ post, onChange, onDeleted }: PostProps) {
     const [liking, setLiking] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [showComments, setShowComments] = useState(false);
+
+    // Keep the post's comment counter in sync as comments/replies come and go.
+    const handleCommentCountChange = (delta: number) =>
+        onChange({ ...post, comments_count: Math.max(0, post.comments_count + delta) });
 
     const handleLike = async () => {
         if (liking) return;
@@ -89,11 +95,19 @@ export default function Post({ post, onChange, onDeleted }: PostProps) {
                     {post.liked_by_me ? '♥' : '♡'} {post.likes_count}
                     <span className="bs-post-action-label"> Like{post.likes_count === 1 ? '' : 's'}</span>
                 </button>
-                <span className="bs-post-action bs-muted">
+                <button
+                    type="button"
+                    className={`bs-post-action${showComments ? ' bs-comment-open' : ''}`}
+                    onClick={() => setShowComments((v) => !v)}
+                >
                     💬 {post.comments_count}
                     <span className="bs-post-action-label"> Comment{post.comments_count === 1 ? '' : 's'}</span>
-                </span>
+                </button>
             </footer>
+
+            {showComments && (
+                <CommentSection postId={post.id} onCountChange={handleCommentCountChange} />
+            )}
         </article>
     );
 }

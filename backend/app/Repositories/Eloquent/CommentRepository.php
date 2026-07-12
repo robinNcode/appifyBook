@@ -28,7 +28,8 @@ class CommentRepository implements CommentRepositoryInterface
     public function createForPost(Post $post, array $data, int $userId): Comment
     {
         $comment = $post->comments()->make([
-            'content' => $data['content'],
+            'content' => $data['content'] ?? null,
+            'image_path' => $data['image_path'] ?? null,
             'parent_id' => $data['parent_id'] ?? null,
         ]);
         $comment->user_id = $userId;

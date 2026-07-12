@@ -3,12 +3,11 @@ import api from './client'
 import type {
   ApiEnvelope,
   AuthResponse,
-  //Collection,
-  //Comment,
- // CreateCommentPayload,
+  Comment,
   CursorPaginated,
   LikeToggleResponse,
   LoginCredentials,
+  Paginated,
   Post,
   RegisterPayload,
   Resource,
@@ -43,29 +42,26 @@ export const deletePost = (id: number): Promise<AxiosResponse<{ message: string 
 export const togglePostLike = (postId: number): Promise<AxiosResponse<LikeToggleResponse>> =>
   api.post(`/posts/${postId}/like`)
 
+export const toggleCommentLike = (
+  commentId: number
+): Promise<AxiosResponse<LikeToggleResponse>> => api.post(`/comments/${commentId}/like`)
+
 // --- Comments & replies ---
-// export const fetchComments = (
-//   postId: number,
-//   page = 1
-// ): Promise<AxiosResponse<Collection<Comment>>> =>
-//   api.get(`/posts/${postId}/comments`, { params: { page } })
+// Top-level comments (with their replies) are length-aware paginated, 15 per page.
+export const fetchComments = (
+  postId: number,
+  page = 1
+): Promise<AxiosResponse<Paginated<Comment>>> =>
+  api.get(`/posts/${postId}/comments`, { params: { page } })
 
-// export const createComment = (
-//   postId: number,
-//   payload: CreateCommentPayload
-// ): Promise<AxiosResponse<Resource<Comment>>> => api.post(`/posts/${postId}/comments`, payload)
+// Comments carry an optional image, so they go up as multipart/form-data.
+export const createComment = (
+  postId: number,
+  formData: FormData
+): Promise<AxiosResponse<Resource<Comment>>> =>
+  api.post(`/posts/${postId}/comments`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 
-// export const deleteComment = (id: number): Promise<AxiosResponse<void>> =>
-//   api.delete(`/comments/${id}`)
-
-// // --- Likes ---
-// export const togglePostLike = (postId: number): Promise<AxiosResponse<LikeToggleResponse>> =>
-//   api.post(`/posts/${postId}/like`)
-// export const toggleCommentLike = (
-//   commentId: number
-// ): Promise<AxiosResponse<LikeToggleResponse>> => api.post(`/comments/${commentId}/like`)
-// export const fetchPostLikers = (postId: number): Promise<AxiosResponse<Collection<User>>> =>
-//   api.get(`/posts/${postId}/likers`)
-// export const fetchCommentLikers = (
-//   commentId: number
-// ): Promise<AxiosResponse<Collection<User>>> => api.get(`/comments/${commentId}/likers`)
+export const deleteComment = (id: number): Promise<AxiosResponse<{ message: string }>> =>
+  api.delete(`/comments/${id}`)

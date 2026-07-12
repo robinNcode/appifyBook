@@ -20,7 +20,9 @@ class StoreCommentValidator extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'required|string|max:2000',
+            // A comment needs text or an image (or both).
+            'content' => 'required_without:image|nullable|string|max:2000',
+            'image' => 'nullable|image|max:5120',
             // A reply points at an existing comment; top-level comments omit it.
             'parent_id' => 'nullable|integer|exists:comments,id',
         ];
@@ -29,8 +31,10 @@ class StoreCommentValidator extends FormRequest
     public function messages(): array
     {
         return [
-            'content.required' => 'Comment content is required.',
+            'content.required_without' => 'A comment must have text or an image.',
             'content.max' => 'A comment may not exceed 2000 characters.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.max' => 'The image may not be larger than 5MB.',
             'parent_id.exists' => 'The comment you are replying to does not exist.',
         ];
     }

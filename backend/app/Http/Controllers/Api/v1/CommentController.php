@@ -32,8 +32,9 @@ class CommentController extends Controller
     {
         $comment = $this->commentService->create(
             $post,
-            $request->validated(),
+            $request->safe()->only(['content', 'parent_id']),
             $request->user(),
+            $request->file('image'),
         );
 
         return (new CommentResource($comment))

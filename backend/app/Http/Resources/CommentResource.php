@@ -14,6 +14,9 @@ class CommentResource extends JsonResource
             'post_id' => $this->post_id,
             'parent_id' => $this->parent_id,
             'content' => $this->content,
+            'image_url' => $this->image_path
+                ? asset('storage/'.$this->image_path)
+                : null,
             'likes_count' => (int) $this->likes_count,
             'replies_count' => (int) $this->replies_count,
             'liked_by_me' => $this->relationLoaded('likes') && $this->likes->isNotEmpty(),

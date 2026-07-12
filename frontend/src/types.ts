@@ -9,10 +9,18 @@ export interface User {
     avatar_url?: string | null;
 }
 
-export interface PostComment {
+export interface Comment {
   id: number
-  body: string
+  post_id: number
+  parent_id: number | null
+  content: string | null
+  image_url: string | null
+  likes_count: number
+  replies_count: number
+  liked_by_me: boolean
+  is_owner: boolean
   author?: User
+  replies?: Comment[]
   created_at?: string
   created_at_human?: string
 }
@@ -27,7 +35,7 @@ export interface Post {
   liked_by_me: boolean
   is_owner: boolean
   author?: User
-  comments?: PostComment[]
+  comments?: Comment[]
   created_at?: string
   created_at_human?: string
 }
@@ -50,6 +58,17 @@ export interface RegisterPayload {
     email: string;
     password: string;
     confirm_password: string;
+}
+
+/**
+ * Fields for creating a comment or reply. A comment needs `content`, an
+ * `image`, or both. `parent_id` is set only when replying to a comment.
+ * Sent as multipart/form-data so an image file can ride along.
+ */
+export interface CreateCommentPayload {
+    content?: string;
+    image?: File | null;
+    parent_id?: number | null;
 }
 
 
@@ -89,6 +108,29 @@ export interface CursorPaginated<T> {
   data: T[]
   meta?: {
     next_cursor: string | null
+  }
+}
+
+/**
+ * A length-aware paginated collection — the shape Laravel's
+ * `ResourceCollection` emits for `->paginate()`. Comments use this.
+ */
+export interface Paginated<T> {
+  data: T[]
+  links: {
+    first: string | null
+    last: string | null
+    prev: string | null
+    next: string | null
+  }
+  meta: {
+    current_page: number
+    from: number | null
+    last_page: number
+    path: string
+    per_page: number
+    to: number | null
+    total: number
   }
 }
 
