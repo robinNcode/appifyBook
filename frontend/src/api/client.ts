@@ -7,8 +7,14 @@ export const getToken = (): string | null => localStorage.getItem(TOKEN_KEY);
 export const setToken = (token: string): void => localStorage.setItem(TOKEN_KEY, token);
 export const clearToken = (): void => localStorage.removeItem(TOKEN_KEY);
 
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:6063/api'
+const API_VERSION = import.meta.env.VITE_API_VERSION ?? 'v1'
+
+// Trim stray slashes so a trailing '/' on the env value can't produce '//'.
+const baseURL = `${API_URL.replace(/\/+$/, '')}/${API_VERSION.replace(/^\/+/, '')}`
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + '/' + import.meta.env.VITE_API_VERSION || 'http://localhost:6063/api/v1',
+  baseURL,
   headers: {
     Accept: 'application/json',
   },

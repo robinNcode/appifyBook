@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { asset } from '../utils/asset';
 import Avatar from './Avatar';
 
 export default function Navbar() {
@@ -16,7 +17,7 @@ export default function Navbar() {
             <div className="bs-navbar-inner">
                 <div className="bs-navbar-brand">
                     <img
-                        src="/assets/images/appifybook-logo.svg"
+                        src={asset('assets/images/appifybook-logo.svg')}
                         alt="AppifyBook"
                         className="bs-navbar-logo"
                     />
