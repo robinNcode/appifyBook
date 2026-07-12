@@ -32,21 +32,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .finally(() => { setLoading(false); });
     }, []);
 
-    const handleAuthSuccess = ({user, token}: AuthResponse) => {
-        setToken(token);
+    const handleAuthSuccess = ({ user, access_token }: AuthResponse) => {
+        setToken(access_token);
         setUser(user);
     }
 
     const login = async (credentials: LoginCredentials) => {
         const response = await authApi.login(credentials);
-        handleAuthSuccess(response.data);
-        return response.data.user;
+        // Auth payload is nested under the standard envelope's `data` key.
+        const auth = response.data.data;
+        handleAuthSuccess(auth);
+        return auth.user;
     }
 
     const register = async (credentials: RegisterPayload) => {
         const response = await authApi.register(credentials);
-        handleAuthSuccess(response.data);
-        return response.data.user;
+        const auth = response.data.data;
+        handleAuthSuccess(auth);
+        return auth.user;
     }
 
     const logout = async () : Promise<void> => {

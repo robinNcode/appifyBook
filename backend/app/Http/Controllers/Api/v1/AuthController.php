@@ -56,6 +56,17 @@ class AuthController extends Controller
     }
 
     /**
+     * Return the currently authenticated user.
+     *
+     * Serialized as `{ data: {...} }` so the frontend can read `data.data`
+     * to restore its session on boot.
+     */
+    public function me(Request $request): UserResource
+    {
+        return new UserResource($request->user());
+    }
+
+    /**
      * Logout the authenticated user.
      */
     public function logout(Request $request): JsonResponse

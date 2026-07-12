@@ -197,3 +197,273 @@ body {
   padding: 40px 20px;
   color: #888;
 }
+
+/* ---------------------------------------------------------------------------
+   Feed layout — clean, self-contained styles for the timeline, composer,
+   navbar and post cards. Layered on top of the base theme.
+   ------------------------------------------------------------------------- */
+
+.bs-feed-page {
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.bs-feed {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.bs-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+/* Navbar */
+.bs-navbar {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.bs-navbar-inner {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bs-navbar-logo {
+  height: 34px;
+}
+
+.bs-navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bs-navbar-avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.bs-navbar-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.bs-navbar-logout {
+  background: #f0f2f5;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+}
+
+.bs-navbar-logout:hover {
+  background: #e4e6eb;
+}
+
+/* Composer */
+.bs-compose-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.bs-compose-avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+}
+
+.bs-compose-hello {
+  color: #666;
+  font-size: 14px;
+}
+
+.bs-compose-textarea {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+.bs-compose-textarea:focus {
+  border-color: #377dff;
+}
+
+.bs-compose-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.bs-compose-photo {
+  cursor: pointer;
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
+}
+
+.bs-compose-actions .bs-btn-primary {
+  margin-left: auto;
+}
+
+/* Buttons */
+.bs-btn-primary {
+  background: #377dff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 84px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bs-btn-primary:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.bs-btn-secondary {
+  background: #fff;
+  color: #377dff;
+  border: 1px solid #377dff;
+  border-radius: 6px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bs-btn-secondary:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* Post card */
+.bs-post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.bs-post-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.bs-post-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.bs-post-author {
+  font-weight: 600;
+  font-size: 15px;
+  color: #222;
+}
+
+.bs-post-sub {
+  font-size: 12px;
+  color: #888;
+}
+
+.bs-post-delete {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.bs-post-delete:hover {
+  opacity: 1;
+}
+
+.bs-post-content {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bs-post-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.bs-post-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+}
+
+button.bs-post-action:hover {
+  background: #f0f2f5;
+}
+
+.bs-post-action.bs-active {
+  color: #e0245e;
+  font-weight: 600;
+}
+
+/* Feed states */
+.bs-feed-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px;
+  color: #666;
+}
+
+.bs-feed-more {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.bs-spinner-dark {
+  border-color: rgba(55, 125, 255, 0.3);
+  border-top-color: #377dff;
+}

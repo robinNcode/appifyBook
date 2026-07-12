@@ -5,8 +5,16 @@ export interface User {
     first_name?: string;
     last_name?: string;
     name: string;
-    email: string | null;
-    avatar?: string | null;
+    email?: string | null;
+    avatar_url?: string | null;
+}
+
+export interface PostComment {
+  id: number
+  body: string
+  author?: User
+  created_at?: string
+  created_at_human?: string
 }
 
 export interface Post {
@@ -19,9 +27,15 @@ export interface Post {
   liked_by_me: boolean
   is_owner: boolean
   author?: User
-  comments?: Comment[]
+  comments?: PostComment[]
   created_at?: string
   created_at_human?: string
+}
+
+/** Response from toggling a like: `{ liked, likes_count }`. */
+export interface LikeToggleResponse {
+  liked: boolean
+  likes_count: number
 }
 
 // Request Payloads ...
@@ -40,10 +54,23 @@ export interface RegisterPayload {
 
 
 // Response Envelope
+
+/**
+ * Standard API envelope used by the backend controllers:
+ * `{ code, status, message, data: T }`.
+ */
+export interface ApiEnvelope<T> {
+    code: number;
+    status: string;
+    message: string;
+    data: T;
+}
+
+/** Payload nested under `data` on the login/register responses. */
 export interface AuthResponse {
-    token: string;
-    token_type: string;
     user: User;
+    access_token: string;
+    token_type: string;
 }
 
 

@@ -1,12 +1,13 @@
 import type { AxiosResponse } from 'axios'
 import api from './client'
 import type {
+  ApiEnvelope,
   AuthResponse,
   //Collection,
   //Comment,
  // CreateCommentPayload,
   CursorPaginated,
-  //LikeToggleResponse,
+  LikeToggleResponse,
   LoginCredentials,
   Post,
   RegisterPayload,
@@ -15,10 +16,12 @@ import type {
 } from '../types'
 
 // --- Auth ---
-export const register = (payload: RegisterPayload): Promise<AxiosResponse<AuthResponse>> =>
-  api.post('/register', payload)
-export const login = (payload: LoginCredentials): Promise<AxiosResponse<AuthResponse>> =>
-  api.post('/login', payload)
+export const register = (
+  payload: RegisterPayload
+): Promise<AxiosResponse<ApiEnvelope<AuthResponse>>> => api.post('/register', payload)
+export const login = (
+  payload: LoginCredentials
+): Promise<AxiosResponse<ApiEnvelope<AuthResponse>>> => api.post('/login', payload)
 export const logout = (): Promise<AxiosResponse<{ message: string }>> => api.post('/logout')
 export const fetchMe = (): Promise<AxiosResponse<Resource<User>>> => api.get('/me')
 
@@ -33,7 +36,12 @@ export const createPost = (formData: FormData): Promise<AxiosResponse<Resource<P
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 
-export const deletePost = (id: number): Promise<AxiosResponse<void>> => api.delete(`/posts/${id}`)
+export const deletePost = (id: number): Promise<AxiosResponse<{ message: string }>> =>
+  api.delete(`/posts/${id}`)
+
+// --- Likes ---
+export const togglePostLike = (postId: number): Promise<AxiosResponse<LikeToggleResponse>> =>
+  api.post(`/posts/${postId}/like`)
 
 // --- Comments & replies ---
 // export const fetchComments = (
