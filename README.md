@@ -151,3 +151,71 @@ appify-book/
 │
 └── README.md                  # This file
 ```
+
+## Authentication flow
+
+1. `POST /api/register` or `POST /api/login` → returns `{ user, token }`.
+2. The SPA stores the token in `localStorage` and sends it as `Authorization: Bearer <token>`.
+3. Protected routes use the `auth:api` middleware (Passport guard).
+4. `POST /api/logout` revokes the current token.
+
+Passport token lifetimes are configured in `AppServiceProvider`: access tokens 7 days, refresh 30 days.
+
+---
+
+## API reference
+
+All protected endpoints require `Authorization: Bearer <token>` and `Accept: application/json`.
+
+### Auth
+| Method | Endpoint | Body | Notes |
+|---|---|---|---|
+| POST | `/api/register` | first_name, last_name, email, password, password_confirmation | Returns user + token |
+| POST | `/api/login` | email, password | Returns user + token |
+| GET  | `/api/me` | — | Current user |
+| POST | `/api/logout` | — | Revokes token |
+
+### Posts
+| Method | Endpoint | Notes |
+|---|---|---|
+| GET  | `/api/posts` | Cursor-paginated feed (10/page), newest first, visibility-filtered |
+| POST | `/api/posts` | `multipart/form-data`: content?, image?, visibility. Needs text or image |
+| GET  | `/api/posts/{post}` | Single post (403 if private & not owner) |
+| DELETE | `/api/posts/{post}` | Author only |
+
+### Comments
+| Method | Endpoint | Notes |
+|---|---|---|
+| GET  | `/api/posts/{post}/comments` | Top-level comments + nested replies, paginated |
+| POST | `/api/posts/{post}/comments` | Body: content, parent_id? (reply). Rejects replies-to-replies |
+| DELETE | `/api/comments/{comment}` | Author only; adjusts counters |
+
+### Likes
+| Method | Endpoint | Notes |
+|---|---|---|
+| POST | `/api/posts/{post}/like` | Toggle. Returns `{ liked, likes_count }` |
+| POST | `/api/comments/{comment}/like` | Toggle. Returns `{ liked, likes_count }` |
+| GET  | `/api/posts/{post}/likers` | Users who liked the post |
+| GET  | `/api/comments/{comment}/likers` | Users who liked the comment/reply |
+
+---
+
+## Frontend architecture
+
+- **`AuthContext`** — holds the current user, hydrates from `/api/me` on boot if a token exists, exposes `login/register/logout`.
+- **`ProtectedRoute`** — gates `/feed`, redirecting to `/login` when unauthenticated.
+- **`api/client.js`** — axios instance with request (attach token) and response (`401` → logout) interceptors.
+- **`Feed`** — cursor-based infinite scroll via `IntersectionObserver`.
+- **`Post` / `Comment`** — optimistic like toggles; `Comment` recurses one level for replies.
+- **`LikersModal`** — lazy-loads the likers list for any entity.
+
+Styling reuses the **provided Buddy Script theme** verbatim (`public/assets/css`), with a small supplemental stylesheet (`src/styles/app.css`) for interactive states the static template didn't cover.
+
+
+## What I'd add with more time
+
+- **Real-time updates** (WebSockets/Laravel Echo) for live likes & comments.
+- **Rate limiting** on write endpoints and image-processing/thumbnails on upload.
+- **Feed fan-out / caching** (Redis) for very high read volume.
+- **Cursor pagination for comments** (currently page-based) if threads get large.
+- **Automated tests** (Pest/PHPUnit for the API, Vitest/RTL for components).
