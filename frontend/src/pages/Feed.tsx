@@ -4,6 +4,7 @@ import { fetchPosts } from '../api/services';
 import Navbar from '../components/Navbar';
 import CreatePost from '../components/CreatePost';
 import Post from '../components/Post';
+import PostSkeleton from '../components/PostSkeleton';
 import type { Post as PostType } from '../types';
 
 export default function Feed() {
@@ -76,8 +77,10 @@ export default function Feed() {
                 )}
 
                 {loading ? (
-                    <div className="bs-feed-loading">
-                        <span className="bs-spinner bs-spinner-dark" /> Loading feed…
+                    <div className="bs-feed-skeletons">
+                        {Array.from({ length: 3 }, (_, i) => (
+                            <PostSkeleton key={i} />
+                        ))}
                     </div>
                 ) : posts.length === 0 && !error ? (
                     <div className="bs-empty">No posts yet. Be the first to share something!</div>

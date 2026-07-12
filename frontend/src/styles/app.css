@@ -469,6 +469,123 @@ button.bs-post-action:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   Skeleton loading placeholders
+   ------------------------------------------------------------------------- */
+
+.bs-feed-skeletons {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Base shimmer block. Any sized element gets the animated sweep. */
+.bs-sk {
+  display: block;
+  border-radius: 6px;
+  background: #e9ecef;
+  background-image: linear-gradient(
+    90deg,
+    #e9ecef 0%,
+    #f3f5f7 50%,
+    #e9ecef 100%
+  );
+  background-size: 200% 100%;
+  animation: bs-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes bs-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.bs-sk-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 50%;
+}
+
+.bs-sk-avatar-sm {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+}
+
+.bs-sk-meta {
+  gap: 8px;
+  flex: 1;
+}
+
+.bs-sk-line {
+  height: 12px;
+}
+
+.bs-sk-w-25 {
+  width: 25%;
+}
+.bs-sk-w-30 {
+  width: 30%;
+}
+.bs-sk-w-40 {
+  width: 40%;
+}
+.bs-sk-w-60 {
+  width: 60%;
+}
+.bs-sk-w-75 {
+  width: 75%;
+}
+.bs-sk-w-80 {
+  width: 80%;
+}
+.bs-sk-w-90 {
+  width: 90%;
+}
+
+.bs-sk-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bs-sk-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+}
+
+.bs-sk-pill {
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+/* Comment skeleton row */
+.bs-comment-skeleton {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.bs-sk-bubble {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  padding: 4px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-sk {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Comments & replies
    ------------------------------------------------------------------------- */
 

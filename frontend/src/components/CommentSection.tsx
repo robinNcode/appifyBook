@@ -3,6 +3,7 @@ import { isAxiosError } from 'axios';
 import { fetchComments } from '../api/services';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
+import CommentSkeleton from './CommentSkeleton';
 import type { Comment } from '../types';
 
 interface CommentSectionProps {
@@ -77,8 +78,10 @@ export default function CommentSection({ postId, onCountChange }: CommentSection
             )}
 
             {loading ? (
-                <div className="bs-comment-loading">
-                    <span className="bs-spinner bs-spinner-dark" /> Loading comments…
+                <div className="bs-comment-list">
+                    {Array.from({ length: 2 }, (_, i) => (
+                        <CommentSkeleton key={i} />
+                    ))}
                 </div>
             ) : comments.length === 0 && !error ? (
                 <p className="bs-comment-empty">No comments yet. Be the first to comment!</p>

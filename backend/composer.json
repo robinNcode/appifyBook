@@ -10,7 +10,8 @@
         "laravel/framework": "^12.0",
         "laravel/passport": "^13.0",
         "laravel/tinker": "^2.10.1",
-        "laravolt/avatar": "^6.4"
+        "laravolt/avatar": "^6.4",
+        "robinncode/laravel-db-craft": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
